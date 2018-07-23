@@ -7,7 +7,7 @@ module ActiveHouse
     included do
       private
 
-      def apply_scope(name)
+      def apply_scope(name, *args)
         scope = model_class._scopes.fetch(name.to_sym)
         instance_exec(*args, &scope)
       end
@@ -33,7 +33,7 @@ module ActiveHouse
 
     def method_missing(method_name, *args, &_block)
       if scope?(method_name)
-        apply_scope(method_name)
+        apply_scope(method_name, *args)
       else
         super
       end

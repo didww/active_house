@@ -8,7 +8,6 @@ module ActiveHouse
         value = idx + 1 > bindings.size ? nil : format_value(bindings[idx])
         "#{part}#{value}"
       end.join
-      sql
     end
 
     def self.format_value(value)

@@ -7,12 +7,10 @@ module ActiveHouse
 
       def build_select_query_part
         if !@fields.empty?
-          query_data = ['SELECT']
-          query_data.concat @fields
+          "SELECT\n#{@fields.join(",\n")}"
         else
-          query_data = ['SELECT *']
+          'SELECT *'
         end
-        query_data.join("\n")
       end
     end
 
