@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'activemodel', '~> 5.0.0'
+  spec.add_dependency 'activemodel'
   spec.add_dependency 'activesupport'
   spec.add_dependency 'clickhouse', '~> 0.1.10'
 
