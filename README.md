@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/active_house.svg)](https://badge.fury.io/rb/active_house)
+
 # ActiveHouse
 
 ClickHouse ORM and Query DSL
