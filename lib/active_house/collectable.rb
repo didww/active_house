@@ -27,7 +27,7 @@ module ActiveHouse
 
     def fetch_collection
       result = connection.select_rows(to_query.squish)
-      result.map { |row| model_class.new(row) }
+      result.map { |row| model_class.load!(row) }
     end
   end
 end

@@ -17,7 +17,8 @@ module ActiveHouse
       end
 
       def apply_default_scope
-        apply_scope(model_class._default_scope) unless model_class._default_scope.nil?
+        return if model_class._default_scope.nil?
+        apply_scope(model_class._default_scope)
       end
     end
 

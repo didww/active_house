@@ -18,7 +18,7 @@ module ActiveHouse
       end
 
       def attribute_method?(name, is_setter, *args)
-        (_attribute_opts.key?(name) || @_attributes.key?(name)) && (is_setter ? args.size.one? : true)
+        (_attribute_opts.key?(name) || @_attributes.key?(name)) && (is_setter ? args.size == 1 : true)
       end
 
       def get_attribute(name)
@@ -40,11 +40,17 @@ module ActiveHouse
         options = names.extract_options!
         names.each { |name| attributes(name, options.dup) }
       end
+
+      def load!(params)
+        new.tap do |model|
+          params.each { |name, value| model[name] = value }
+        end
+      end
     end
 
     def initialize(params = {})
       @_attributes = {}
-      assign_attributes(params)
+      assign_attributes(params) unless params.nil?
     end
 
     def as_json(*_args)
@@ -57,6 +63,16 @@ module ActiveHouse
 
     def [](key)
       @_attributes[key.to_sym]
+    end
+
+    def []=(key, value)
+      @_attributes[key.to_sym] = value
+    end
+
+    def assign_attributes(params)
+      params.each do |key, val|
+        public_send("#{key}=", val)
+      end
     end
 
     def respond_to_missing?(method_name, *args)
