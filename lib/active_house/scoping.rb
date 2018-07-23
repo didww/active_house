@@ -11,8 +11,8 @@ module ActiveHouse
     end
 
     class_methods do
-      def default_scope(&block)
-        self._default_scope = block
+      def default_scope(name)
+        self._default_scope = name.to_sym
       end
 
       def scope(name, block)

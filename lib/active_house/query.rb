@@ -12,7 +12,7 @@ module ActiveHouse
     end
 
     def connection
-      model_klass.connection
+      model_class.connection
     end
 
     include ActiveHouse::Chainable
