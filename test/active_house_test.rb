@@ -5,11 +5,13 @@ class ActiveHouseTest < Minitest::Test
     refute_nil ::ActiveHouse::VERSION
   end
 
-  def test_it_does_something_useful
-    assert false
-  end
-
-  def test_qwe
-    assert_equal 'test', ActiveHouse::Model.select(:foo).where(user_id: 3).to_sql
+  def test_simple_query
+    expected_query = <<-SQL.squish
+      SELECT foo
+      FROM db.some_table
+      WHERE user_id = 3
+      LIMIT 2, 3
+    SQL
+    assert_equal expected_query, TestModel.select(:foo).where(user_id: 3).limit(2, 3).to_query.squish
   end
 end
