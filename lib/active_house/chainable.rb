@@ -3,6 +3,7 @@ require_relative 'fromable'
 require_relative 'whereable'
 require_relative 'orderable'
 require_relative 'groupable'
+require_relative 'limitable'
 require 'active_support/concern'
 
 module ActiveHouse
@@ -14,6 +15,7 @@ module ActiveHouse
     include ActiveHouse::Whereable
     include ActiveHouse::Orderable
     include ActiveHouse::Groupable
+    include ActiveHouse::Limitable
 
     included do
       protected
@@ -34,7 +36,8 @@ module ActiveHouse
             build_from_query_part,
             build_where_query_part,
             build_group_by_query_part,
-            build_order_by_query_part
+            build_order_by_query_part,
+            build_limit_query_part
         ]
       end
 
@@ -86,7 +89,8 @@ module ActiveHouse
           select: :fields,
           where: :conditions,
           group_by: :grouping,
-          order_by: :ordering
+          order_by: :ordering,
+          limit: :limit
       }
     end
 
