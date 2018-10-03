@@ -1,3 +1,5 @@
+require 'active_support/core_ext/object/try'
+
 module ActiveHouse
   module Orderable
     extend ActiveSupport::Concern
@@ -25,7 +27,7 @@ module ActiveHouse
         elsif clause.is_a?(Hash)
           if clause.keys.one?
             direction = clause.values.first
-            raise ArgumentError, 'direction must be asc or desc' if [:asc, :desc].exclude?(direction.try!(:to_sym))
+            raise ArgumentError, 'direction must be asc or desc' unless [:asc, :desc].include?(direction.try!(:to_sym))
             "#{clause.keys.first} #{direction.to_s.upcase}"
           else
             clause.assert_valid_keys(:field, :direction, :collate)

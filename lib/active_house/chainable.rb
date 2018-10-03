@@ -4,6 +4,8 @@ require_relative 'whereable'
 require_relative 'orderable'
 require_relative 'groupable'
 require_relative 'limitable'
+require_relative 'havingable'
+require_relative 'unionable'
 require 'active_support/concern'
 
 module ActiveHouse
@@ -15,7 +17,9 @@ module ActiveHouse
     include ActiveHouse::Whereable
     include ActiveHouse::Orderable
     include ActiveHouse::Groupable
+    include ActiveHouse::Havingable
     include ActiveHouse::Limitable
+    include ActiveHouse::Unionable
 
     included do
       protected
@@ -26,7 +30,8 @@ module ActiveHouse
 
       def data=(other_data)
         chain_methods.values.each do |var|
-          instance_variable_set(:"@#{var}", other_data.fetch(var).dup)
+          value = other_data.fetch(var)
+          instance_variable_set(:"@#{var}", value.nil? ? nil : value.dup)
         end
       end
 
@@ -36,8 +41,10 @@ module ActiveHouse
             build_from_query_part,
             build_where_query_part,
             build_group_by_query_part,
+            build_having_query_part,
             build_order_by_query_part,
-            build_limit_query_part
+            build_limit_query_part,
+            build_union_query_part
         ]
       end
 
@@ -90,7 +97,23 @@ module ActiveHouse
           where: :conditions,
           group_by: :grouping,
           order_by: :ordering,
-          limit: :limit
+          limit: :limit,
+          having: :having,
+          union: :unions,
+          from: :subquery
+      }
+    end
+
+    def chain_defaults
+      {
+          fields: [],
+          conditions: [],
+          grouping: [],
+          ordering: [],
+          limit: { offset: nil, limit: nil },
+          having: [],
+          union: {},
+          subquery: nil,
       }
     end
 
@@ -103,7 +126,7 @@ module ActiveHouse
 
       new_data = {}
       chain_methods.each do |meth, var|
-        new_data[var] = [] if values.include?(meth)
+        new_data[var] = chain_defaults[var].dup if values.include?(meth)
       end
       chain_query(new_data)
     end

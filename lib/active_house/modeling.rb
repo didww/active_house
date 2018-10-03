@@ -38,7 +38,7 @@ module ActiveHouse
 
       def attributes(*names)
         options = names.extract_options!
-        names.each { |name| attributes(name, options.dup) }
+        names.each { |name| attribute(name, options.dup) }
       end
 
       def load!(params)

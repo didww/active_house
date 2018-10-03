@@ -5,18 +5,25 @@ module ActiveHouse
     included do
       private
 
+      def from_subquery
+        return model_class._table_name if @subquery.nil?
+        query = @subquery.is_a?(ActiveHouse::Query) ? @subquery.to_query : @subquery
+        "( #{query} )"
+      end
+
       def build_from_query_part
-        "FROM #{table_name}"
+        "FROM #{from_subquery}"
       end
     end
 
     def initialize(*)
-      @table_name = model_class._table_name
+      @subquery = nil
       super
     end
 
-    def table_name
-      @table_name
+    def from(table_or_subquery)
+      raise ArgumentError, '' if !table_or_subquery.is_a?(ActiveHouse::Query) && !table_or_subquery.is_a?(String)
+      chain_query subquery: table_or_subquery.dup
     end
   end
 end
