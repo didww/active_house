@@ -41,4 +41,27 @@ class ActiveHouseTest < Minitest::Test
     scope = IncomingCall.select('SUM(duration > 0) AS sum_duration', :src).group_by(:src).having('sum_duration > ?', 0)
     assert_query expected_query, scope
   end
+
+  def test_query_union
+    expected_query = <<-SQL
+      SELECT time_start, duration > 0 AS success, src AS number, 1 AS direction
+      FROM incoming.calls
+      WHERE user_id = 3
+      UNION ALL
+      SELECT time_start, duration > 0 AS success, dst AS number, 2 AS direction
+      FROM outgoing.calls
+      WHERE user_id = 3
+    SQL
+    expected_subquery = <<-SQL
+      SELECT time_start, duration > 0 AS success, dst AS number, 2 AS direction
+      FROM outgoing.calls
+      WHERE user_id = 3 AND src = '123456'
+    SQL
+    outgoing_scope = OutgoingCall.select(:time_start, 'duration > 0 AS success', 'dst AS number', '2 AS direction')
+    scope = IncomingCall.select(:time_start, 'duration > 0 AS success', 'src AS number', '1 AS direction').
+        where(user_id: 3).union(outgoing_scope).update_union(0) { |s| s.where(user_id: 3) }
+    sub_scope = scope.union_for(0).where(src: '123456')
+    assert_query expected_query, scope
+    assert_query expected_subquery, sub_scope
+  end
 end

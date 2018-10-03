@@ -5,6 +5,7 @@ require_relative 'orderable'
 require_relative 'groupable'
 require_relative 'limitable'
 require_relative 'havingable'
+require_relative 'unionable'
 require 'active_support/concern'
 
 module ActiveHouse
@@ -18,6 +19,7 @@ module ActiveHouse
     include ActiveHouse::Groupable
     include ActiveHouse::Havingable
     include ActiveHouse::Limitable
+    include ActiveHouse::Unionable
 
     included do
       protected
@@ -40,7 +42,8 @@ module ActiveHouse
             build_group_by_query_part,
             build_having_query_part,
             build_order_by_query_part,
-            build_limit_query_part
+            build_limit_query_part,
+            build_union_query_part
         ]
       end
 
@@ -94,7 +97,8 @@ module ActiveHouse
           group_by: :grouping,
           order_by: :ordering,
           limit: :limit,
-          having: :having
+          having: :having,
+          union: :unions
       }
     end
 
