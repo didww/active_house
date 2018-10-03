@@ -30,4 +30,15 @@ class ActiveHouseTest < Minitest::Test
     scope = IncomingCall.select(:time_start, 'duration > 0 AS success', :src).where(user_id: 3)
     assert_query expected_query, scope
   end
+
+  def test_query_group_by_and_having
+    expected_query = <<-SQL
+      SELECT SUM(duration > 0) AS sum_duration, src
+      FROM incoming.calls
+      GROUP BY src
+      HAVING sum_duration > 0
+    SQL
+    scope = IncomingCall.select('SUM(duration > 0) AS sum_duration', :src).group_by(:src).having('sum_duration > ?', 0)
+    assert_query expected_query, scope
+  end
 end
