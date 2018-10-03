@@ -30,7 +30,8 @@ module ActiveHouse
 
       def data=(other_data)
         chain_methods.values.each do |var|
-          instance_variable_set(:"@#{var}", other_data.fetch(var).dup)
+          value = other_data.fetch(var)
+          instance_variable_set(:"@#{var}", value.nil? ? nil : value.dup)
         end
       end
 
@@ -98,7 +99,8 @@ module ActiveHouse
           order_by: :ordering,
           limit: :limit,
           having: :having,
-          union: :unions
+          union: :unions,
+          from: :subquery
       }
     end
 
@@ -110,7 +112,8 @@ module ActiveHouse
           ordering: [],
           limit: { offset: nil, limit: nil },
           having: [],
-          union: {}
+          union: {},
+          subquery: nil,
       }
     end
 

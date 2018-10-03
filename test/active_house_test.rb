@@ -71,4 +71,24 @@ class ActiveHouseTest < Minitest::Test
     assert_query expected_subquery, sub_scope
     assert_query expected_without_union, without_union
   end
+
+  def test_subquery
+    expected_query = <<-SQL
+      SELECT COUNT(success) AS success_qty, COUNT(time_start) AS all_qty, toStartOfDay(time_start) AS start_date
+      FROM (
+        SELECT id, time_start, duration > 0 AS success
+        FROM incoming.calls
+        WHERE user_id = 3
+      )
+      GROUP BY toStartOfDay(time_start)
+    SQL
+    subquery = IncomingCall.select(:id, :time_start, 'duration > 0 AS success').where(user_id: 3)
+    scope = ActiveHouse::Query.new.from(subquery).
+        select(
+            'COUNT(success) AS success_qty',
+            'COUNT(time_start) AS all_qty',
+            'toStartOfDay(time_start) AS start_date'
+        ).group_by('toStartOfDay(time_start)')
+    assert_query expected_query, scope
+  end
 end
