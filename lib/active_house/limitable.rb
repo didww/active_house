@@ -6,22 +6,22 @@ module ActiveHouse
       private
 
       def build_limit_query_part
-        return if @limit.empty?
-        if @limit[1]
-          "LIMIT #{@limit[0]}, #{@limit[1]}"
+        return if @limit[:limit].nil?
+        if @limit[:offset]
+          "LIMIT #{@limit[:limit]}, #{@limit[:offset]}"
         else
-          "LIMIT #{@limit[0]}"
+          "LIMIT #{@limit[:limit]}"
         end
       end
     end
 
     def initialize(*)
-      @limit = []
+      @limit = { offset: nil, limit: nil }
       super
     end
 
     def limit(limit_value, offset_value = nil)
-      chain_query limit: (@limit + [limit_value, offset_value]).uniq
+      chain_query limit: { offset: offset_value || @limit[:offset], limit: limit_value }
     end
   end
 end

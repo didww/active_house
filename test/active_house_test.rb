@@ -57,11 +57,18 @@ class ActiveHouseTest < Minitest::Test
       FROM outgoing.calls
       WHERE user_id = 3 AND src = '123456'
     SQL
+    expected_without_union = <<-SQL
+      SELECT time_start, duration > 0 AS success, src AS number, 1 AS direction
+      FROM incoming.calls
+      WHERE user_id = 3 AND duration = 0
+    SQL
     outgoing_scope = OutgoingCall.select(:time_start, 'duration > 0 AS success', 'dst AS number', '2 AS direction')
     scope = IncomingCall.select(:time_start, 'duration > 0 AS success', 'src AS number', '1 AS direction').
-        where(user_id: 3).union(outgoing_scope).update_union(0) { |s| s.where(user_id: 3) }
-    sub_scope = scope.union_for(0).where(src: '123456')
+        where(user_id: 3).union(:out, outgoing_scope).update_union(:out) { |s| s.where(user_id: 3) }
+    sub_scope = scope.union_for(:out).where(src: '123456')
+    without_union = scope.except_union(:out).where(duration: 0)
     assert_query expected_query, scope
     assert_query expected_subquery, sub_scope
+    assert_query expected_without_union, without_union
   end
 end

@@ -102,6 +102,18 @@ module ActiveHouse
       }
     end
 
+    def chain_defaults
+      {
+          fields: [],
+          conditions: [],
+          grouping: [],
+          ordering: [],
+          limit: { offset: nil, limit: nil },
+          having: [],
+          union: {}
+      }
+    end
+
     def except(*values)
       raise ArgumentError, 'wrong number of arguments' if values.empty?
       not_allowed = values - chain_methods.keys
@@ -111,7 +123,7 @@ module ActiveHouse
 
       new_data = {}
       chain_methods.each do |meth, var|
-        new_data[var] = [] if values.include?(meth)
+        new_data[var] = chain_defaults[var].dup if values.include?(meth)
       end
       chain_query(new_data)
     end
