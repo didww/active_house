@@ -33,7 +33,7 @@ module ActiveHouse
     end
 
     def fetch_collection
-      to_hash.map { |row| model_class.load!(row) }
+      to_hashes.map { |row| model_class.load!(row) }
     end
   end
 end

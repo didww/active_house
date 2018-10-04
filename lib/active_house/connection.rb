@@ -40,6 +40,10 @@ module ActiveHouse
       select_all(sql, *bindings).to_hashes
     end
 
+    def raw_query(sql)
+      connection.get(sql)
+    end
+
     def connection_alive?
       return false if connection.nil?
       if connection.is_a?(Clickhouse::Cluster)
