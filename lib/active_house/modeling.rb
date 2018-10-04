@@ -34,6 +34,12 @@ module ActiveHouse
       def attribute(name, options = {})
         name = name.to_sym
         self._attribute_opts = _attribute_opts.merge(name => options)
+        define_method(name) do
+          get_attribute(name)
+        end
+        define_method("#{name}=") do |value|
+          set_attribute(name, value)
+        end
       end
 
       def attributes(*names)
