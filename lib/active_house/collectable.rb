@@ -22,13 +22,18 @@ module ActiveHouse
       !@collection.nil?
     end
 
+    def to_hashes
+      connection.select_rows(to_query.squish)
+    end
+
+    private
+
     def collection
       @collection ||= fetch_collection
     end
 
     def fetch_collection
-      result = connection.select_rows(to_query.squish)
-      result.map { |row| model_class.load!(row) }
+      to_hash.map { |row| model_class.load!(row) }
     end
   end
 end
