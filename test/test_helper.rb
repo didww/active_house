@@ -16,3 +16,8 @@ class OutgoingCall < ActiveHouse::Model
   table_name 'outgoing.calls'
   attributes :id, :duration, :timestamp, :src, :dst, :user_id, :call_start_timestamp, :call_end_timestamp
 end
+
+class PathObject < ActiveHouse::Model
+  table_name 'canvas.path_objects'
+  attributes :name, :dots, :distances, :user_id
+end

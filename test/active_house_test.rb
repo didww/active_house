@@ -91,4 +91,15 @@ class ActiveHouseTest < Minitest::Test
         ).group_by('toStartOfDay(time_start)')
     assert_query expected_query, scope
   end
+
+  def test_array_join
+    expected_query = <<-SQL
+      SELECT name, distances, dot.x, dot.y
+      FROM canvas.path_objects ARRAY JOIN distances, dots AS dot
+      WHERE user_id = 3
+    SQL
+    scope = PathObject.select(:name, :distances, 'dot.x', 'dot.y').
+        array_join(:distances, 'dots AS dot').where(user_id: 3)
+    assert_query expected_query, scope
+  end
 end

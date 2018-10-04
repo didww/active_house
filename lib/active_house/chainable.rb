@@ -6,6 +6,7 @@ require_relative 'groupable'
 require_relative 'limitable'
 require_relative 'havingable'
 require_relative 'unionable'
+require_relative 'array_joinable'
 require 'active_support/concern'
 
 module ActiveHouse
@@ -20,6 +21,7 @@ module ActiveHouse
     include ActiveHouse::Havingable
     include ActiveHouse::Limitable
     include ActiveHouse::Unionable
+    include ActiveHouse::ArrayJoinable
 
     included do
       protected
@@ -39,6 +41,7 @@ module ActiveHouse
         [
             build_select_query_part,
             build_from_query_part,
+            build_array_join_query_part,
             build_where_query_part,
             build_group_by_query_part,
             build_having_query_part,
@@ -100,10 +103,13 @@ module ActiveHouse
           limit: :limit,
           having: :having,
           union: :unions,
-          from: :subquery
+          from: :subquery,
+          array_join: :array_joins
       }
     end
 
+    # key - instance variable name that which store values
+    # value - default value for the variable
     def chain_defaults
       {
           fields: [],
@@ -114,6 +120,7 @@ module ActiveHouse
           having: [],
           union: {},
           subquery: nil,
+          array_joins: []
       }
     end
 
