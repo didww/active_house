@@ -63,8 +63,8 @@ class ActiveHouseTest < Minitest::Test
       WHERE user_id = 3 AND duration = 0
     SQL
     outgoing_scope = OutgoingCall.select(:time_start, 'duration > 0 AS success', 'dst AS number', '2 AS direction')
-    scope = IncomingCall.select(:time_start, 'duration > 0 AS success', 'src AS number', '1 AS direction').
-        where(user_id: 3).union(:out, outgoing_scope).update_union(:out) { |s| s.where(user_id: 3) }
+    scope = IncomingCall.select(:time_start, 'duration > 0 AS success', 'src AS number', '1 AS direction')
+                        .where(user_id: 3).union(:out, outgoing_scope).update_union(:out) { |s| s.where(user_id: 3) }
     sub_scope = scope.union_for(:out).where(src: '123456')
     without_union = scope.except_union(:out).where(duration: 0)
     assert_query expected_query, scope
@@ -83,12 +83,12 @@ class ActiveHouseTest < Minitest::Test
       GROUP BY toStartOfDay(time_start)
     SQL
     subquery = IncomingCall.select(:id, :time_start, 'duration > 0 AS success').where(user_id: 3)
-    scope = ActiveHouse::Query.new.from(subquery).
-        select(
-            'COUNT(success) AS success_qty',
-            'COUNT(time_start) AS all_qty',
-            'toStartOfDay(time_start) AS start_date'
-        ).group_by('toStartOfDay(time_start)')
+    scope = ActiveHouse::Query.new.from(subquery)
+                              .select(
+                                'COUNT(success) AS success_qty',
+                                'COUNT(time_start) AS all_qty',
+                                'toStartOfDay(time_start) AS start_date'
+                              ).group_by('toStartOfDay(time_start)')
     assert_query expected_query, scope
   end
 
@@ -98,8 +98,8 @@ class ActiveHouseTest < Minitest::Test
       FROM canvas.path_objects ARRAY JOIN distances, dots AS dot
       WHERE user_id = 3
     SQL
-    scope = PathObject.select(:name, :distances, 'dot.x', 'dot.y').
-        array_join(:distances, 'dots AS dot').where(user_id: 3)
+    scope = PathObject.select(:name, :distances, 'dot.x', 'dot.y')
+                      .array_join(:distances, 'dots AS dot').where(user_id: 3)
     assert_query expected_query, scope
   end
 

@@ -23,9 +23,9 @@ module ActiveHouse
       chain_query unions: new_unions
     end
 
-    def update_union(name, &block)
+    def update_union(name)
       raise ArgumentError, "can't find union by name #{name}" unless @unions.key?(name)
-      new_union = block.call union_for(name)
+      new_union = yield union_for(name)
       union(name, new_union)
     end
 

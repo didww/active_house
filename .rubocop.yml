@@ -14,7 +14,7 @@ Metrics/MethodLength:
 Metrics/AbcSize:
   Enabled: false
 
-Metrics/MethodLength:
+Metrics/ModuleLength:
   Enabled: false
 
 Metrics/PerceivedComplexity:

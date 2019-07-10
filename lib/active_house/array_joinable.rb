@@ -6,9 +6,7 @@ module ActiveHouse
       private
 
       def build_array_join_query_part
-        unless @array_joins.empty?
-          "ARRAY JOIN #{@array_joins.join(', ')}"
-        end
+        "ARRAY JOIN #{@array_joins.join(', ')}" unless @array_joins.empty?
       end
     end
 
