@@ -19,5 +19,6 @@ end
 
 class PathObject < ActiveHouse::Model
   table_name 'canvas.path_objects'
-  attributes :name, :dots, :distances, :user_id
+  attributes :name, :dots, :distances
+  attribute :user_id, cast: ->(value) { value.try!(:to_i) }
 end

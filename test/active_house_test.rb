@@ -102,4 +102,21 @@ class ActiveHouseTest < Minitest::Test
         array_join(:distances, 'dots AS dot').where(user_id: 3)
     assert_query expected_query, scope
   end
+
+  def test_attribute_cast
+    p1 = PathObject.new
+    assert_nil p1.user_id
+
+    p2 = PathObject.new(user_id: nil)
+    assert_nil p2.user_id
+
+    p3 = PathObject.new(user_id: 2)
+    assert_equal 2, p3.user_id
+
+    p4 = PathObject.new(user_id: '2')
+    assert_equal 2, p4.user_id
+
+    p5 = PathObject.new(user_id: 2.1)
+    assert_equal 2, p5.user_id
+  end
 end

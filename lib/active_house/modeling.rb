@@ -26,6 +26,8 @@ module ActiveHouse
       end
 
       def set_attribute(name, value)
+        opts = _attribute_opts.fetch(name, {})
+        value = opts[:cast].call(value) if opts[:cast]
         @_attributes[name] = value
       end
     end
