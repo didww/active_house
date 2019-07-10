@@ -70,11 +70,11 @@ module ActiveHouse
     end
 
     def [](key)
-      @_attributes[key.to_sym]
+      get_attribute(key.to_sym)
     end
 
     def []=(key, value)
-      @_attributes[key.to_sym] = value
+      set_attribute(key.to_sym, value)
     end
 
     def assign_attributes(params)
