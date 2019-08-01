@@ -11,7 +11,7 @@ module ActiveHouse
     end
 
     class_methods do
-      delegate :to_a, :select, :where, :group_by, :limit, :order_by, :having, to: :all
+      delegate :to_a, :select, :where, :group_by, :limit, :order_by, :having, :from, to: :all
 
       def all
         _query_class.new(self)
