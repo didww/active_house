@@ -46,5 +46,12 @@ module ActiveHouse
       formatted_conditions = Array.wrap(format_condition(*conditions))
       chain_query conditions: (@conditions + formatted_conditions).uniq
     end
+
+    def where_not(*conditions)
+      raise ArgumentError, 'wrong number of arguments' if conditions.empty?
+      formatted_conditions = Array.wrap(format_condition(*conditions))
+      negative_condition = "NOT (#{formatted_conditions.join(' AND ')})"
+      chain_query conditions: (@conditions + [negative_condition]).uniq
+    end
   end
 end

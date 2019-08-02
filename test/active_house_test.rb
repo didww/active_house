@@ -21,6 +21,16 @@ class ActiveHouseTest < Minitest::Test
     assert_query expected_query, scope
   end
 
+  def test_query_with_where_not
+    expected_query = <<-SQL
+      SELECT foo
+      FROM db.some_table
+      WHERE NOT (user_id = 3)
+    SQL
+    scope = TestModel.select(:foo).where_not(user_id: 3)
+    assert_query expected_query, scope
+  end
+
   def test_query
     expected_query = <<-SQL
       SELECT time_start, duration > 0 AS success, src
