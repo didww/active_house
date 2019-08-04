@@ -1,20 +1,22 @@
-require_relative 'scoping'
-require_relative 'querying'
-require_relative 'modeling'
-require_relative 'connecting'
-require_relative 'logger'
 require 'active_model/conversion'
 require 'active_model/naming'
+require 'plain_model/modeling/base'
+require 'plain_model/modeling/queryable'
+require_relative 'modeling/scope'
+require_relative 'modeling/query'
+require_relative 'modeling/attributes'
+require_relative 'modeling/connection'
+require_relative 'logging'
 
 module ActiveHouse
   class Model
-    include ActiveHouse::Scoping
-    include ActiveHouse::Querying
-    include ActiveHouse::Modeling
-    include ActiveHouse::Connecting
-    include ActiveHouse::Logger
-    include ActiveModel::Conversion
-    extend ActiveModel::Naming
+    extend PlainModel::Modeling::Queryable
+    include PlainModel::Modeling::Base
+    include ActiveHouse::Modeling::Scope
+    include ActiveHouse::Modeling::Query
+    include ActiveHouse::Modeling::Attributes
+    include ActiveHouse::Modeling::Connection
+    include ActiveHouse::Logging
 
     class_attribute :_table_name, instance_accessor: false
 

@@ -1,7 +1,7 @@
-require_relative 'connection_error'
-require_relative 'prepared_statement'
 require 'clickhouse/cluster'
 require 'clickhouse/connection'
+require_relative 'exceptions'
+require_relative 'prepared_statement'
 
 module ActiveHouse
   class Connection
@@ -72,7 +72,7 @@ module ActiveHouse
 
     def ensure_connected!
       @connection = establish_connection unless connection_alive?
-      raise ActiveHouse::ConnectionError unless connection_alive?
+      raise ActiveHouse::Exceptions::ConnectionError unless connection_alive?
     end
 
     def establish_connection

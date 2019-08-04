@@ -18,9 +18,9 @@ module ActiveHouse
         "'#{value.gsub("'", "\\'")}'"
       elsif value.is_a?(Time)
         if value.respond_to?(:zone)
-          "toDateTime('#{value.strftime('%Y-%m-%d %H:%M:%S')}', '#{value.zone}')"
+          "toDateTime('#{value.strftime('%F %T')}', '#{value.zone}')"
         else
-          "toDateTime('#{value.strftime('%Y-%m-%d %H:%M:%S')}')"
+          "toDateTime('#{value.strftime('%F %T')}')"
         end
       else
         value.to_s
@@ -32,6 +32,38 @@ module ActiveHouse
       parts = sql.split('?')
       parts.push('') if sql.end_with?('?')
       parts
+    end
+
+    # @param condition [Hash]
+    def self.build_condition(condition)
+      return [condition.to_s] unless condition.is_a?(Hash)
+
+      condition.map do |field, value|
+        "#{field} #{sign_for_condition(value)} #{format_value(value)}"
+      end
+    end
+
+    def self.sign_for_condition(value)
+      if value.is_a?(Array)
+        'IN'
+      elsif value.nil?
+        'IS'
+      else
+        '='
+      end
+    end
+
+    def self.format_fields(model_class, fields)
+      raise ArgumentError, 'wrong number of arguments' if fields.empty?
+
+      fields.map do |field|
+        if field.is_a?(Symbol) && model_class._attribute_opts.key?(field)
+          opts = model_class._attribute_opts.fetch(field)
+          opts.key?(:select) ? "#{opts[:select]} AS #{field}" : field.to_s
+        else
+          field.to_s
+        end
+      end
     end
   end
 end

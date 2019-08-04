@@ -37,3 +37,12 @@ Layout/IndentArray:
 
 Layout/IndentHash:
   IndentationWidth: 4
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Style/AccessModifierDeclarations:
+  Enabled: false

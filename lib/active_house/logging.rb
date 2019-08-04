@@ -1,7 +1,7 @@
 require 'active_support/concern'
 
 module ActiveHouse
-  module Logger
+  module Logging
     extend ActiveSupport::Concern
 
     class_methods do
