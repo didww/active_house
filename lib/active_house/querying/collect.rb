@@ -87,9 +87,19 @@ module ActiveHouse
         values[:group_by].empty? ? nil : values[:group_by]
       end
 
+      def pluck(*fields)
+        result = except(:select).select(*fields).to_hashes
+        return [] if result.empty?
+        if result.first.keys.size == 1
+          result.map { |row| row.values.first }
+        else
+          result.map(&:values)
+        end
+      end
+
       def count(value = 'COUNT() AS cnt')
         return 0 if group_values
-        except(:select, :limit, :offset, :order).select(value).to_hashes.first.values.first
+        except(:select, :limit, :offset, :order).pluck(value).first
       end
 
     end
