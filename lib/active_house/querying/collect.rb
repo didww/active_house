@@ -1,6 +1,8 @@
 require 'active_support/concern'
 require 'active_support/core_ext/string/filters'
 require 'active_support/core_ext/module/delegation'
+require_relative '../search'
+require_relative '../search_query'
 
 module ActiveHouse
   module Querying
@@ -9,6 +11,7 @@ module ActiveHouse
 
       included do
         private :collection, :fetch_collection, :query_parts, :build_query
+        instance_delegate [:connection] => :model_class
         instance_delegate [
             :each,
             :size,
@@ -75,6 +78,20 @@ module ActiveHouse
       def build_query
         query_parts.reject(&:nil?).join("\n")
       end
+
+      def klass
+        model_class
+      end
+
+      def group_values
+        values[:group_by].empty? ? nil : values[:group_by]
+      end
+
+      def count(value = 'COUNT() AS cnt')
+        return 0 if group_values
+        except(:select, :limit, :offset, :order).select(value).to_hashes.first.values.first
+      end
+
     end
   end
 end

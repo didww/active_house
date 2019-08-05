@@ -15,9 +15,21 @@ class ActiveHouseTest < Minitest::Test
       FROM db.some_table
       WHERE user_id = 3
       ORDER BY foo ASC
-      LIMIT 2, 3
+      LIMIT 2 OFFSET 3
     SQL
     scope = TestModel.select(:foo).where(user_id: 3).limit(2, 3).order_by(foo: :asc)
+    assert_query expected_query, scope
+  end
+
+  def test_limit_by
+    expected_query = <<-SQL
+      SELECT foo
+      FROM db.some_table
+      WHERE user_id = 3
+      ORDER BY foo ASC
+      LIMIT 2 OFFSET 3 BY foo
+    SQL
+    scope = TestModel.select(:foo).where(user_id: 3).limit(2, 3, :foo).order_by(foo: :asc)
     assert_query expected_query, scope
   end
 

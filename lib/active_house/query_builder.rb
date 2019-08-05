@@ -10,6 +10,7 @@ require_relative 'querying/having'
 require_relative 'querying/limit'
 require_relative 'querying/union'
 require_relative 'querying/array_join'
+require_relative 'querying/page'
 require_relative 'querying/scope'
 require_relative 'querying/collect'
 
@@ -29,8 +30,10 @@ module ActiveHouse
     include ActiveHouse::Querying::Union
     include ActiveHouse::Querying::ArrayJoin
     include ActiveHouse::Querying::Scope
+    include ActiveHouse::Querying::Page
     include ActiveHouse::Querying::Collect
 
+    # allows using query without model_class
     def initialize(model_class = nil)
       super(model_class || ActiveHouse::Model)
     end
