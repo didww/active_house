@@ -13,7 +13,6 @@ module ActiveHouse
         instance_delegate [
             :each,
             :size,
-            :count,
             :map,
             :collect,
             :detect,
