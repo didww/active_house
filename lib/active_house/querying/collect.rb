@@ -1,8 +1,6 @@
 require 'active_support/concern'
 require 'active_support/core_ext/string/filters'
 require 'active_support/core_ext/module/delegation'
-require_relative '../search'
-require_relative '../search_query'
 
 module ActiveHouse
   module Querying
