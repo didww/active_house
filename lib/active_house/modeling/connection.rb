@@ -10,11 +10,18 @@ module ActiveHouse
 
       included do
         class_attribute :_connection_class, instance_accessor: false
-        class_attribute :_connection, instance_accessor: false
         self._connection_class = ActiveHouse::Connection
       end
 
       class_methods do
+        def _connection
+          Thread[name]
+        end
+
+        def _connection=(value)
+          Thread[name] = value
+        end
+
         def ensure_connection
           establish_connection if _connection.nil?
         end
