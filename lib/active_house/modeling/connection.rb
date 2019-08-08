@@ -15,11 +15,11 @@ module ActiveHouse
 
       class_methods do
         def _connection
-          Thread[name]
+          Thread.current[name]
         end
 
         def _connection=(value)
-          Thread[name] = value
+          Thread.current[name] = value
         end
 
         def ensure_connection
