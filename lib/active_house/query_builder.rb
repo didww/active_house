@@ -1,5 +1,4 @@
 require 'plain_model/querying/base'
-require 'plain_model/querying/except'
 require 'plain_model/querying/with_model'
 require_relative 'querying/select'
 require_relative 'querying/from'
@@ -12,12 +11,12 @@ require_relative 'querying/union'
 require_relative 'querying/array_join'
 require_relative 'querying/page'
 require_relative 'querying/scope'
+require_relative 'querying/except'
 require_relative 'querying/collect'
 
 module ActiveHouse
   class QueryBuilder
     include PlainModel::Querying::Base
-    include PlainModel::Querying::Except
     include PlainModel::Querying::WithModel
 
     include ActiveHouse::Querying::Select
@@ -31,6 +30,7 @@ module ActiveHouse
     include ActiveHouse::Querying::ArrayJoin
     include ActiveHouse::Querying::Scope
     include ActiveHouse::Querying::Page
+    include ActiveHouse::Querying::Except
     include ActiveHouse::Querying::Collect
 
     # allows using query without model_class
