@@ -10,15 +10,15 @@ module ActiveHouse
       end
 
       def build_select_query_part
-        if !values[:fields].empty?
-          "SELECT\n#{values[:fields].join(",\n")}"
+        if !values[:select].empty?
+          "SELECT\n#{values[:select].join(",\n")}"
         else
           'SELECT *'
         end
       end
 
       def initial_values
-        super.merge fields: []
+        super.merge select: []
       end
 
       def select(*fields)
@@ -27,7 +27,7 @@ module ActiveHouse
 
       def select!(*fields)
         formatted_fields = ActiveHouse::PreparedStatement.format_fields(model_class, fields)
-        values[:fields] = (values[:fields] + formatted_fields).uniq
+        values[:select] = (values[:select] + formatted_fields).uniq
         self
       end
     end

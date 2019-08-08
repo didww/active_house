@@ -8,8 +8,8 @@ module ActiveHouse
       end
 
       def from_subquery
-        return model_class._table_name if values[:subquery].nil?
-        query = values[:subquery].is_a?(ActiveHouse::QueryBuilder) ? values[:subquery].to_query : values[:subquery].to_s
+        return model_class._table_name if values[:from].nil?
+        query = values[:from].is_a?(ActiveHouse::QueryBuilder) ? values[:from].to_query : values[:from].to_s
         "( #{query} )"
       end
 
@@ -18,7 +18,7 @@ module ActiveHouse
       end
 
       def from!(table_or_subquery)
-        values[:subquery] = table_or_subquery.dup
+        values[:from] = table_or_subquery.dup
         self
       end
 
