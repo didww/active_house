@@ -6,5 +6,5 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 gemspec
 
 group :test do
-  gem 'rubocop', '0.58.1', require: false
+  gem 'rubocop', '0.80.1', require: false
 end
