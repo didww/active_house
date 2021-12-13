@@ -2,6 +2,11 @@ $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 require 'active_house'
 
 require 'minitest/autorun'
+require 'webmock/minitest'
+
+ActiveHouse.configure do |config|
+  config.connection_config = { url: 'https://clickhouse.example.com:1234' }
+end
 
 class TestModel < ActiveHouse::Model
   table_name 'db.some_table'

@@ -184,4 +184,41 @@ class ActiveHouseTest < Minitest::Test
     assert_equal 2, p8[:user_id]
     assert_equal 2, p8['user_id']
   end
+
+  def test_query_execution
+    # connection ping
+    WebMock.stub_request(:get, "#{ActiveHouse.configuration.connection_config[:url]}/")
+
+    expected_query = <<-SQL.squish
+      SELECT src
+      FROM #{IncomingCall._table_name}
+      WHERE id = 3
+      FORMAT JSONCompact
+    SQL
+    response_body = {
+        meta: [
+            { name: 'src', type: 'String' }
+        ],
+        data: [
+            ['foobar']
+        ],
+        rows: 1,
+        statistics: {
+            elapsed: 4.3742e-05,
+            rows_read: 1,
+            bytes_read: 6
+        }
+    }
+    WebMock.stub_request(:post, "#{ActiveHouse.configuration.connection_config[:url]}/?output_format_write_statistics=1&query=").with(
+      body: expected_query,
+      headers: { 'Content-Type' => 'text/plain' }
+    ).to_return(
+      body: response_body.to_json
+    )
+
+    result = IncomingCall.select(:src).where(id: 3).to_a
+    assert_kind_of Array, result
+    assert_equal result.size, 1
+    assert_equal result.first, IncomingCall.new(src: 'foobar')
+  end
 end
