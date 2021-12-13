@@ -1,4 +1,5 @@
 require 'active_model/conversion'
+require 'active_support/core_ext/module/delegation'
 require 'active_model/naming'
 require 'plain_model/modeling/base'
 require 'plain_model/modeling/queryable'
