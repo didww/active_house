@@ -7,4 +7,5 @@ gemspec
 
 group :test do
   gem 'rubocop', '0.58.1', require: false
+  gem 'webmock'
 end

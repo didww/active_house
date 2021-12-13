@@ -97,6 +97,14 @@ module ActiveHouse
           super
         end
       end
+
+      def ==(other)
+        other.class == self.class && other._attributes == _attributes
+      end
+
+      protected
+
+      attr_reader :_attributes
     end
   end
 end

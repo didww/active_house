@@ -21,7 +21,7 @@ module ActiveHouse
 
     def select_all(sql, *bindings)
       prepared_sql = prepared_statement(sql, *bindings)
-      connection.query(prepared_sql)
+      connection.post_query(prepared_sql)
     end
 
     def select_values(sql, *bindings)
