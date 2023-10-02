@@ -9,7 +9,7 @@ module ActiveHouse
 
     MAIN_NAME = :main
     CONNECTION_KEYS = [
-        :url, :urls, :host, :port, :scheme, :database
+        :url, :urls, :host, :port, :scheme, :database, :username, :password
     ].freeze
 
     class << self
